@@ -1,4 +1,4 @@
-package t3_CRUD;
+package t4_CRUD;
 // 1.sql 2.VO 3.DAO(데이터베이스연결)
 
 import java.sql.Connection;
@@ -20,7 +20,9 @@ public class HoewonDAO2 {
 		try {
 			Class.forName("com.mysql.jdbc.Driver");
 			
-			String url = "jdbc:mysql://localhost:3306/javaclass";
+			 String url = "jdbc:mysql://localhost:3306/javaclass";
+			// String url = "jdbc:mysql://127.0.0.1:3306/javaclass"; // 외부에서 접속할 때 localhost부분에 아이피, 혹은 사이트 주소 (로컬호스트 아이피: 127.0.0.1)
+			// String url = "jdbc:mysql://192.168.50.58:3306/javaclass"; 
 			String user = "atom";
 			String password = "1234";
 			conn = DriverManager.getConnection(url, user, password);
@@ -110,11 +112,11 @@ public class HoewonDAO2 {
 		return vo;
 	}
 
+/*
 	// 회원자료 수정처리
 	public void setUpdate(int idx, int choice, String content) {
 		try {
 			stmt = conn.createStatement();
-			//sql= "";
 			if(choice == 1) {
 				sql = "update hoewon set name = '"+content+"' where idx = "+idx;
 			}
@@ -135,6 +137,8 @@ public class HoewonDAO2 {
 			stmtClose();
 		}
 	}
+*/
+	
 
 	// 회원 삭제 처리
 	public void setDelete(String name) {
@@ -161,6 +165,24 @@ public class HoewonDAO2 {
 		} finally {
 			stmtClose();
 		}
+	}
+
+	// 회원 정보 수정하기
+	public int setUpdate(HoewonVO vo) {
+		// System.out.println("vo : "+vo); => 수정이 잘 되었는지 체크 후 삭제하면 됨
+		int res = 0;
+		try {
+			stmt = conn.createStatement();
+			sql = "update hoewon set name='"+vo.getName()+"',age="+vo.getAge()+",gender='"+vo.getGender()+"',address='"+vo.getAddress()+"' where idx="+vo.getIdx();
+			// executeQuery: select에만 씀, executeUpdate: insert,update,delete
+			res = stmt.executeUpdate(sql);
+			// System.out.println("res : "+res); -> 체크한뒤 최종으로 출력은 되지 않게 삭제 혹은 주석처리
+		} catch (SQLException e) {
+			System.out.println("SQL 오류 : "+e.getMessage());
+		} finally {
+			stmtClose();
+		}
+		return res;
 	}
 	
 }
